@@ -1,0 +1,7 @@
+- if current_user
+	Welcome #{current_user.name}!
+	= link_to "Sign Out", signout_path
+	%br
+	= @lists.count
+- else
+	= link_to "Sign in with Twitter", "/auth/twitter"

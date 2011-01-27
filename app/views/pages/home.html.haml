@@ -6,8 +6,6 @@
 	- unless @list_count.nil?
 		Number of lists: 
 		= @list_count
-	- else
-		= flash[:error]
 - else
 	%a{:href => "/auth/twitter"}
 		%img{:alt => "Sign in with Twitter", :src => '/images/twitter.png'}

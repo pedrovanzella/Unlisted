@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
 		end	 
  end
 
-	def create_lists
+	def create_lists(x => 5)
 		Twitter.configure do |config|
 		  config.consumer_key = '4PH57DoSzgyt5CfYRfJDhw'
 		  config.consumer_secret = '8BSDfkxt46sL1kbW98V2h2arzbzzNkGfpLoVGehnQA'
@@ -24,19 +24,22 @@ class User < ActiveRecord::Base
 		
 		@client = Twitter::Client.new
 		cursor = -1
-		
-		while cursor != 0
-			@client.memberships('elland', :cursor => cursor).lists.each do |list|
-				@list = List.new
-				@list.list_id = list.id
-				@list.name = list.full_name
-				@list.creator = list.user.name
-				@list.last_checked = Time.now.to_datetime
-				@list.users << self
-				@list.save
-				self.save
+		begin
+			while cursor != 0 && x <= 5
+				@client.memberships('elland', :cursor => cursor).lists.each do |list|
+					@list = List.new
+					@list.list_id = list.id
+					@list.name = list.full_name
+					@list.creator = list.user.name
+					@list.last_checked = Time.now.to_datetime
+					@list.users << self
+					@list.save
+					self.save
+				end
+				cursor = @client.memberships('elland', :cursor => cursor)[:next_cursor]
 			end
-			cursor = @client.memberships('elland', :cursor => cursor)[:next_cursor]
+		rescue
+			create_lists(x--)
 		end
 	end
 

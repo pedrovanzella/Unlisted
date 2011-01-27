@@ -1,3 +1,2 @@
 class ListsController < ApplicationController
-
 end

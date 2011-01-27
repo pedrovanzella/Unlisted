@@ -1,11 +1,13 @@
 - if current_user
-	Welcome #{current_user.name}!
+	Welcome 
+	= link_to current_user.name, 'http://twitter.com/'+current_user.username
 	= link_to "Sign Out", signout_path
 	%br
-	- unless @lists.empty?
+	- unless @list_count.nil?
 		Number of lists: 
-		= @lists.count
+		= @list_count
 	- else
 		= flash[:error]
 - else
-	= link_to "Sign in with Twitter", "/auth/twitter"
+	%a{:href => "/auth/twitter"}
+		%img{:alt => "Sign in with Twitter", :src => '/images/twitter.png'}

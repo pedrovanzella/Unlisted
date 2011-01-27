@@ -1,4 +1,6 @@
 Unlisted::Application.routes.draw do
+  resources :lists
+
   resources :pages
 
 	match "/auth/:provider/callback" => "sessions#create"

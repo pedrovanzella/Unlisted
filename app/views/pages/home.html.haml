@@ -2,6 +2,10 @@
 	Welcome #{current_user.name}!
 	= link_to "Sign Out", signout_path
 	%br
-	= @lists.count
+	- unless @lists.empty?
+		Number of lists: 
+		= @lists.count
+	- else
+		= flash[:error]
 - else
 	= link_to "Sign in with Twitter", "/auth/twitter"

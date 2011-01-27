@@ -6,23 +6,29 @@ class PagesController < ApplicationController
 			  config.consumer_secret = '8BSDfkxt46sL1kbW98V2h2arzbzzNkGfpLoVGehnQA'
 			  config.oauth_token = current_user.token
 			  config.oauth_token_secret = current_user.secret
-			end
-		
+			end		
+			
 			@client = Twitter::Client.new
 			cursor = -1
 			@lists = []
-			while cursor != 0
-				@client.memberships('elland', :cursor => cursor).lists.each do |list|
-					@lists << list
+
+			#getting the lists and list count
+			begin
+				while cursor != 0
+					@client.memberships('elland', :cursor => cursor).lists.each do |list|
+						@lists << list
+					end
+					cursor = @client.memberships('elland', :cursor => cursor)[:next_cursor]
 				end
-				cursor = @client.memberships('elland', :cursor => cursor)[:next_cursor]
+			rescue
+				flash[:error] = "Twitter went down for a short while, try reloading the page"
 			end
 		end
 	end
+	
 	def about
-		
 	end
+	
 	def contact
-		
 	end
 end

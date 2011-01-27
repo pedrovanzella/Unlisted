@@ -4,4 +4,9 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
+desc "This task is called by the Heroku cron add-on"
+task :cron => :environment do
+ User.check_lists
+end
+
 Unlisted::Application.load_tasks

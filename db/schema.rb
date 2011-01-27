@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(:version => 20110127200031) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "username"
+    t.string   "email"
   end
 
 end

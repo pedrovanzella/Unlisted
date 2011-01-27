@@ -8,9 +8,10 @@ class User < ActiveRecord::Base
 			user.provider = auth["provider"]	
 			user.uid = auth["uid"]	
 			user.username = auth["user_info"]["nickname"]
-			user.name = auth["user_info"]["name"] 
+			user.name = auth["user_info"]["name"]
+			user.email = auth["user_info"]["email"]
 			user.token = auth["credentials"]['token']
-			user.secret = auth["credentials"]["secret"] 
+			user.secret = auth["credentials"]["secret"]
 		end	 
  end
 
@@ -32,14 +33,34 @@ class User < ActiveRecord::Base
 					@list.name = list.full_name
 					@list.creator = list.user.name
 					@list.last_checked = Time.now.to_datetime
-					@list.users << self
-					@list.save
-					self.save
+					unless self.lists.include? @list
+						if @list.save
+							self.lists << list
+						else
+							self.lists << List.find_by_list_id(list.id)
+						end
+					end
 				end
 				cursor = @client.memberships('elland', :cursor => cursor)[:next_cursor]
 			end
 		rescue
 			create_lists(x-1)
+		end
+	end
+
+
+	def self.check_lists
+		@users = self.all
+		@users.each do |user|
+			old_lists = user.lists
+			user.create_lists
+			
+			if (user.lists - old_lists) != [] 
+				p "ganhou lista"
+			end
+			if (old_lists - user.lists) != []
+				p "perdeu lista"
+			end
 		end
 	end
 

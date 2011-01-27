@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
 	after_create :create_lists
 
 	def self.create_with_omniauth(auth)	 
-		create! do |user|	 
+		create! do |user| 
 			user.provider = auth["provider"]	
 			user.uid = auth["uid"]	
 			user.username = auth["user_info"]["nickname"]
@@ -33,18 +33,16 @@ class User < ActiveRecord::Base
 					@list.name = list.full_name
 					@list.creator = list.user.name
 					@list.last_checked = Time.now.to_datetime
-					unless self.lists.include? @list
-						if @list.save
-							self.lists << list
-						else
-							self.lists << List.find_by_list_id(list.id)
-						end
+					if @list.save
+						self.lists << list
+					else
+						self.lists << List.find_by_list_id(list.id)
 					end
+					cursor = @client.memberships('elland', :cursor => cursor)[:next_cursor]
 				end
-				cursor = @client.memberships('elland', :cursor => cursor)[:next_cursor]
 			end
 		rescue
-			create_lists(x-1)
+#			create_lists(x-1)
 		end
 	end
 

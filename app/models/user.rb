@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
 		end	 
  end
 
-	def create_lists(x => 5)
+	def create_lists(x = 5)
 		Twitter.configure do |config|
 		  config.consumer_key = '4PH57DoSzgyt5CfYRfJDhw'
 		  config.consumer_secret = '8BSDfkxt46sL1kbW98V2h2arzbzzNkGfpLoVGehnQA'
@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
 				cursor = @client.memberships('elland', :cursor => cursor)[:next_cursor]
 			end
 		rescue
-			create_lists(x--)
+			create_lists(x-1)
 		end
 	end
 
